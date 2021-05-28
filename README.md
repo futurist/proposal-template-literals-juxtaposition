@@ -135,6 +135,11 @@ var s = `Hello,`
         `Welcome!`;
 ```
 
+### Problems
+
+This syntax maybe break the template literal function that return another template literal function.
+
+
 ### Why not heredoc syntax?
 
 There's already a proposal of heredoc like triple-backticks syntax:
