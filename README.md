@@ -1,4 +1,4 @@
-# ECMAProposal: Template Literals Juxtaposition
+# ECMAProposal: Template Literals Juxtaposition and String.join
 
 ## The Syntax format
 
@@ -7,12 +7,12 @@
 1.  String juxtaposition in
 
     1.  C: `printf("Hello" "World");` will print `HelloWorld`
-    1.  Python: `print('Hello' "World")` result in `'HelloWorld'`
+    2.  Python & Ruby & awk: `print('Hello' "World")` result in `'HelloWorld'`
 
-1.  Juxtaposition in FP like
+2.  Juxtaposition in FP like
 
     1.  Scheme/Lisp: `(+ 1 2 3)`
-    1.  OCaml: `sum 1 2 3`
+    2.  OCaml: `sum 1 2 3`
 
 All of the above **allow NEWLINE** between juxtaposition in addition to spaces.
 
@@ -39,7 +39,7 @@ template === 'This is in a line.';
 
 The format also improved some experience in industrial production, like below:
 
-### RegExp (Syntax 1)
+### RegExp (Syntax 1: Plain TLJ)
 
 Many languages have regular expression engines that support `Free-Spacing Mode`, which allow the author to break long regular expression into multiple lines. This mode [had been discussed](https://esdiscuss.org/topic/regexp-free-spacing-comments) but cannot be applied to javascript.
 
@@ -55,7 +55,7 @@ var re = new RegExp(String.raw
 
 It is an alternate way to simulate the `Free-Spacing Mode` for RegExp.
 
-### New line in TLJ (Syntax 2)
+### New line in TLJ (Syntax 2: Full TLJ)
 
 Think about the below python code case using Syntax 1:
 
@@ -65,60 +65,35 @@ var pythonCode = `def add(a, b):\n` //def add
                  `print(add(1, 2))\n`;  // call and print add
 ```
 
-**The problem here is the new-line** `\n` **char in each TLF, still ugly, this may lead to an alternative syntax (Syntax 2):**
+**The problem here is the new-line** `\n` **char in each TLF, still ugly, this may lead to an advanced syntax (String.join):**
 
-1.  TLJ default to append new line(`\n`) to the end **but except for** the last **TLF**.
-2.  Use `+` to avoid the appending of new line(`\n`), keep the same semantic with strings plus.
+* Plain TLJ is the syntax sugar of the newly introduced `String.join()` function (Full TLJ), so below is same:
 
-So the above code can be improved in **Syntax 2**:
+```js
+`abc``def`
+// ===
+String.join()`abc```def`
+```
 
-````
-var pythonCode = `def add(a, b):` //def add
+* `String.join` can be used to generate a `TLJ joiner`, like above case:
+
+```js
+var pythonCode = String.join(index => '\n')
+                 `def add(a, b):` //def add
                  `  return a + b`
-                 `print(add(1, 2))```;  // add a tailing newline
-````
-
-Notice the last line in the above code has **triple backticks** to append a new line at the end. Or it's possible to write the below codes regarding the newline:
+                 `print(add(1, 2))`;  // call and print add
 
 ```
-// without tailing newline
 
-assert.equal(
-    `Hello`
-    `World`,
-    'Hello\nWorld'
-)
+The `index` is index of TLJ element, the returned `'\n'` will be a string padder after current TLJ element.
 
-
-
-// with a tailing newline
-
-assert.equal(
-    `Hello`
-    `World`
-    ``,
-    'Hello\nWorld\n'
-)
-```
-
-For the RegExp case, add `+` to the end also improves readability:
-
-```
-var re = new RegExp(String.raw
-    `(\d{3}-)?`+ // area code (optional)
-    `\d{3}-`+    // prefix
-    `\d{4}`     // line number
-);
-```
-
-Notice here the last TLF without trailing newline, and use `+` between TLF keeps good semantic of `join literal` without newline added.
 
 ### With placeholders
 
-TLJ has the same behavior as the joint counterpart version, using **Syntax 2** as below:
+TLJ has the same behavior as the joint counterpart version, using **Syntax 2: Full TLJ** as below:
 
 ```
-var s = `Hello: ${name}, `+ // name
+var s = `Hello: ${name}, ` // name
         `your email is: ${email}.`; // email
 
 // same as below
@@ -135,9 +110,24 @@ var s = `Hello,`
         `Welcome!`;
 ```
 
-### Problems
+### Problems with tag function
 
-This syntax maybe break the template literal function that return another template literal function.
+Since Tagged Template Literals cannot be chained, so this syntax maybe break the template literal function that return another template literal function:
+
+```js
+const tag = () => console.log
+tag`abc``def`
+```
+
+So currently be used with tag functions, the solution related to how to `chain` tag functions, a possible way is to introduce new operator for this purpose:
+
+```js
+tag <- `abc``def`
+```
+
+Introducing a new operator here only a possible way, but definitely not a best way maybe?
+
+This problem should be discussed more.
 
 
 ### Why not heredoc syntax?
