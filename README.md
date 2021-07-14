@@ -41,7 +41,7 @@ The format also improved some experience in industrial production, like below:
 
 ### RegExp (Syntax 1: Plain TLJ)
 
-Many languages have regular expression engines that support `Free-Spacing Mode`, which allow the author to break long regular expression into multiple lines. This mode [had been discussed](https://esdiscuss.org/topic/regexp-free-spacing-comments) but cannot be applied to javascript.
+Many languages have regular expression engines that support [Free-Spacing Mode](https://www.regular-expressions.info/freespacing.html), which allow the author to break long regular expression into multiple lines. This mode [had been discussed](https://esdiscuss.org/topic/regexp-free-spacing-comments) but cannot be applied to javascript.
 
 Nowadays the `String.raw` can be a powerful way to construct RegExp, with TLJ, we can write below:
 
