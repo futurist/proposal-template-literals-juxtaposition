@@ -45,7 +45,7 @@ Many languages have regular expression engines that support `Free-Spacing Mode`,
 
 Nowadays the `String.raw` can be a powerful way to construct RegExp, with TLJ, we can write below:
 
-```
+```js
 var re = new RegExp(String.raw
     `(\d{3}-)?` // area code (optional)
     `\d{3}-`    // prefix
@@ -54,6 +54,11 @@ var re = new RegExp(String.raw
 ```
 
 It is an alternate way to simulate the `Free-Spacing Mode` for RegExp.
+
+The above code have no syntax errors, but have semantic errors, since `String.raw` doesn't return another tag function.
+
+**This problem will be discussed later.**
+
 
 ### New line in TLJ (Syntax 2: Full TLJ)
 
@@ -127,7 +132,15 @@ tag <- `abc``def`
 
 Introducing a new operator here only a possible way, but definitely not a best way maybe?
 
-This problem should be discussed more.
+This problem should be discussed more, but the `RegExp` example should be write as below way to avoid semantic bugs:
+
+```js
+var re = new RegExp(String.raw <-
+    `(\d{3}-)?` // area code (optional)
+    `\d{3}-`    // prefix
+    `\d{4}`     // line number
+)
+```
 
 
 ### Why not heredoc syntax?
