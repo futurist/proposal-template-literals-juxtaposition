@@ -55,7 +55,7 @@ var re = new RegExp(String.raw
 
 It is an alternate way to simulate the `Free-Spacing Mode` for RegExp.
 
-The above code have no syntax errors, but have semantic errors, since `String.raw` doesn't return another tag function.
+But at present, the above code have syntax and semantic errors, since `String.raw` doesn't return another tag function.
 
 **This problem will be discussed later.**
 
